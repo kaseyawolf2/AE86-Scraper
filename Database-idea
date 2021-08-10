@@ -2,16 +2,18 @@ things to save in the database
 Listing Info
     album/pictures
     listing heading
+    Listing link
     location
         city
         state
     auction end date
+    List Date
     when it was found
     price
         current price
         buyout price
 
-Vechile Info
+vehicle Info
     title status
     engine info
         milage
