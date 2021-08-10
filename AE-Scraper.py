@@ -1,7 +1,9 @@
 import time
 import datetime
 import re
-from logging import exception
+import sqlite3
+from logging import currentframe, exception
+from typing import List
 from selenium import webdriver
 from selenium.webdriver.common import by
 from selenium.webdriver.common.by import By
@@ -16,26 +18,36 @@ chrome_options.add_argument('--headless')
 driver = webdriver.Chrome(executable_path='/usr/lib/chromium-browser/chromedriver', options=chrome_options)
 driver.set_window_size(1024,786)
 
-# Make file to save
-ResultsFile = open("Documents/Ae-Search/Results-"+ str(datetime.date.today()) +".txt","w")
+dbconn = sqlite3.connect('test.db')
+#dbconn.execute("CREATE TABLE Listings(ListPicture,ListHeading,ListLink,ListCity,ListState,ListDate,ListAuctionEndDate,ListPrice,ListBuyout,CarTitle,CarFuelType,CarMileage,CarYear,CarBodyType,CarBodyColor,CarCondition,CarTransmission,CarWheelDrive,CarSteerLoc)")
 
-def SaveResult(Heading,PostDate,CarYear,CarPrice,PostLink):
-    if Heading != "":
-        ResultsFile.write(Heading)#Car Heading
-        ResultsFile.write("\r")
-    if PostDate != "":
-        ResultsFile.write(PostDate)#Date Posted
-        ResultsFile.write("\r")
-    if CarYear != "":
-        ResultsFile.write(CarYear)#Car Year
-        ResultsFile.write("\r")
-    if CarPrice != "":
-        ResultsFile.write(CarPrice)#Car Price
-        ResultsFile.write("\r")
-    if PostLink != "":
-        ResultsFile.write(PostLink)#Post link
-        ResultsFile.write("\r")
-    ResultsFile.write("\r")
+class CarListing:
+    #Listing Info
+    ListPicture = ""
+    ListHeading = ""
+    ListLink = ""
+    ListCity = ""
+    ListState = ""
+    ListDate = ""
+    ListAuctionEndDate = ""
+    ListPrice = ""
+    ListBuyout = ""
+    #Car Info
+    CarTitle = ""
+    CarFuelType = ""
+    CarMileage = ""
+    CarYear = ""
+    CarBodyType = ""
+    CarBodyColor = ""
+    CarCondition = ""
+    CarTransmission = ""
+    CarWheelDrive = ""
+    CarSteerLoc = ""
+
+def SaveListing(Listing):
+    #print("INSERT INTO Listings VALUES ('{ListPicture}','{ListHeading}','{ListLink}','{ListCity}','{ListState}','{ListDate}','{ListAuctionEndDate}','{ListPrice}','{ListBuyout}','{CarTitle}','{CarFuelType}','{CarMileage}','{CarYear}','{CarBodyType}','{CarBodyColor}','{CarCondition}','{CarTransmission}','{CarWheelDrive}','{CarSteerLoc}')".format(ListPicture = Listing.ListPicture,ListHeading = Listing.ListHeading,ListLink = Listing.ListLink,ListCity = Listing.ListCity,ListState = Listing.ListState,ListDate = Listing.ListDate,ListAuctionEndDate = Listing.ListAuctionEndDate,ListPrice = Listing.ListPrice,ListBuyout = Listing.ListBuyout,CarTitle = Listing.CarTitle,CarFuelType = Listing.CarFuelType,CarMileage = Listing.CarMileage,CarYear = Listing.CarYear,CarBodyType = Listing.CarBodyType,CarBodyColor = Listing.CarBodyColor,CarCondition = Listing.CarCondition,CarTransmission = Listing.CarTransmission,CarWheelDrive = Listing.CarWheelDrive,CarSteerLoc = Listing.CarSteerLoc))
+    dbconn.execute("INSERT INTO Listings VALUES ('{ListPicture}','{ListHeading}','{ListLink}','{ListCity}','{ListState}','{ListDate}','{ListAuctionEndDate}','{ListPrice}','{ListBuyout}','{CarTitle}','{CarFuelType}','{CarMileage}','{CarYear}','{CarBodyType}','{CarBodyColor}','{CarCondition}','{CarTransmission}','{CarWheelDrive}','{CarSteerLoc}')".format(ListPicture = Listing.ListPicture,ListHeading = Listing.ListHeading,ListLink = Listing.ListLink,ListCity = Listing.ListCity,ListState = Listing.ListState,ListDate = Listing.ListDate,ListAuctionEndDate = Listing.ListAuctionEndDate,ListPrice = Listing.ListPrice,ListBuyout = Listing.ListBuyout,CarTitle = Listing.CarTitle,CarFuelType = Listing.CarFuelType,CarMileage = Listing.CarMileage,CarYear = Listing.CarYear,CarBodyType = Listing.CarBodyType,CarBodyColor = Listing.CarBodyColor,CarCondition = Listing.CarCondition,CarTransmission = Listing.CarTransmission,CarWheelDrive = Listing.CarWheelDrive,CarSteerLoc = Listing.CarSteerLoc))
+    dbconn.commit()
 
 
 
@@ -53,11 +65,8 @@ for Pages in range(1,4):    #50 per page * 5 = 250 Cars... 1 Car is on list curr
     except:
         FoundResults = driver.find_elements(By.CLASS_NAME,"searchresults_frame")
         for results in range(len(FoundResults)):
-            ResultsFile.write(FoundResults[results].text) #write info
-            ResultsFile.write("\r")
-            ResultsFile.write(FoundResults[results].find_element(By.TAG_NAME,"a").get_attribute("href")) #write link to post
-            ResultsFile.write("\r")
-            ResultsFile.write("\r")
+            CurList = CarListing()
+            CurList.ListLink = FoundResults[results].find_element(By.TAG_NAME,"a").get_attribute("href")
     else:
         NoResults = driver.find_element(By.CLASS_NAME,"panel-warning").find_element(By.CLASS_NAME,"panel-heading").text
         if NoResults == "No results found"  : # Stop Searching if no more pages
@@ -65,7 +74,6 @@ for Pages in range(1,4):    #50 per page * 5 = 250 Cars... 1 Car is on list curr
            break
 
 ##CriagsList
-
 CraigsList = [
     "https://grandisland.craigslist.org/search/cta?min_auto_year=1983&max_auto_year=1987&query=%28%22Corolla%22%7CCorolla%7C%22Corolla+iM%22%29&auto_make_model=Toyota&hints=makemodel&sort=priceasc&searchNearby=2&nearbyArea=690&nearbyArea=428&nearbyArea=99&nearbyArea=280&nearbyArea=347&nearbyArea=282&nearbyArea=432&nearbyArea=689&nearbyArea=688&nearbyArea=55&nearbyArea=687&nearbyArea=668&nearbyArea=341&nearbyArea=98&nearbyArea=445&nearbyArea=693&nearbyArea=691&nearbyArea=692&nearbyArea=669",
     "https://columbiamo.craigslist.org/search/cta?min_auto_year=1983&max_auto_year=1987&query=%28%22Corolla%22%7CCorolla%7C%22Corolla+iM%22%29&auto_make_model=Toyota&hints=makemodel&sort=priceasc&searchNearby=2&nearbyArea=694&nearbyArea=30&nearbyArea=423&nearbyArea=695&nearbyArea=221&nearbyArea=222&nearbyArea=696&nearbyArea=29&nearbyArea=566",
@@ -106,18 +114,13 @@ for Pages in range(len(CraigsList)):
         NoResults = driver.find_element(By.CLASS_NAME,"alert-warning")
     except:
         FoundResults = driver.find_element(By.ID,"search-results").find_elements(By.CLASS_NAME, "result-row")
-        ResultsFile.write(driver.title.replace(' "("Corolla"|Corolla|"Corolla iM")"', ""))
-        ResultsFile.write("\n")
         print("Found " + str(len(FoundResults)) +" results, Moving on")
-
         for results in range(len(FoundResults)):
-            SaveResult(
-                FoundResults[results].find_element(By.CLASS_NAME, "result-heading").text,
-                FoundResults[results].find_element(By.CLASS_NAME, "result-date").text,
-                "",
-                FoundResults[results].find_element(By.CLASS_NAME, "result-price").text,
-                FoundResults[results].find_element(By.TAG_NAME,"a").get_attribute("href")
-            )
+            CurList = CarListing()
+            CurList.ListHeading = FoundResults[results].find_element(By.CLASS_NAME, "result-heading").text
+            CurList.ListLink = FoundResults[results].find_element(By.TAG_NAME,"a").get_attribute("href")
+            CurList.ListDate = FoundResults[results].find_element(By.CLASS_NAME, "result-date").text
+            CurList = FoundResults[results].find_element(By.CLASS_NAME, "result-price").text,
     else:
         print("Found no results, Moving on")
 
@@ -159,18 +162,8 @@ driver.get("https://www.copart.com/vehicleFinderSearch/?displayStr=Toyota,Coroll
 time.sleep(1)
 FoundResults = driver.find_element(By.ID,"serverSideDataTable").find_element(By.TAG_NAME, "tbody").find_elements(By.TAG_NAME,"tr")
 for results in range(len(FoundResults)):
-    #  SaveResult(
-    #     "Toyota Corolla",
-    #     FoundResults[results].find_element(By.CLASS_NAME, "lotsearchLotauctiondate").text,
-    #     FoundResults[results].find_element(By.CLASS_NAME, "lotsearchLotcenturyyear").text,
-    #     FoundResults[results].find_element(By.CLASS_NAME, "lotsearchLothighbid").find_element(By.CLASS_NAME, "list-unstyled").find_element(By.TAG_NAME, "li").text,
-    #     FoundResults[results].find_element(By.TAG_NAME,"a").get_attribute("href")
-    # )
-    ResultsFile.write(FoundResults[results].text) #write info
-    ResultsFile.write("\n")
-    ResultsFile.write(FoundResults[results].find_element(By.TAG_NAME,"a").get_attribute("href")) #write link to post
-    ResultsFile.write("\n")
-    ResultsFile.write("\n")
+    CurList = CarListing()
+    CurList.ListLink = FoundResults[results].find_element(By.TAG_NAME,"a").get_attribute("href") #write link to post
 
 
 
