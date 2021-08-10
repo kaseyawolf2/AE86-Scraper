@@ -1,0 +1,30 @@
+things to save in the database
+Listing Info
+    album/pictures
+    listing heading
+    location
+        city
+        state
+    auction end date
+    when it was found
+    price
+        current price
+        buyout price
+
+Vechile Info
+    title status
+    engine info
+        milage
+        fuel type
+    Body info
+        year
+        body type (compact hatch)
+        body color
+        condition
+            reported damage
+                location
+                siverity
+    drive type
+        transmission type
+        wheel drive (fwd rwd)
+        steer location (left right hand)
