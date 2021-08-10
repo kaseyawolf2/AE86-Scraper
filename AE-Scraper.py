@@ -67,6 +67,7 @@ for Pages in range(1,4):    #50 per page * 5 = 250 Cars... 1 Car is on list curr
         for results in range(len(FoundResults)):
             CurList = CarListing()
             CurList.ListLink = FoundResults[results].find_element(By.TAG_NAME,"a").get_attribute("href")
+            SaveListing(CurList)
     else:
         NoResults = driver.find_element(By.CLASS_NAME,"panel-warning").find_element(By.CLASS_NAME,"panel-heading").text
         if NoResults == "No results found"  : # Stop Searching if no more pages
@@ -120,7 +121,8 @@ for Pages in range(len(CraigsList)):
             CurList.ListHeading = FoundResults[results].find_element(By.CLASS_NAME, "result-heading").text
             CurList.ListLink = FoundResults[results].find_element(By.TAG_NAME,"a").get_attribute("href")
             CurList.ListDate = FoundResults[results].find_element(By.CLASS_NAME, "result-date").text
-            CurList = FoundResults[results].find_element(By.CLASS_NAME, "result-price").text,
+            CurList.ListPrice = FoundResults[results].find_element(By.CLASS_NAME, "result-price").text
+            SaveListing(CurList)
     else:
         print("Found no results, Moving on")
 
@@ -164,6 +166,7 @@ FoundResults = driver.find_element(By.ID,"serverSideDataTable").find_element(By.
 for results in range(len(FoundResults)):
     CurList = CarListing()
     CurList.ListLink = FoundResults[results].find_element(By.TAG_NAME,"a").get_attribute("href") #write link to post
+    SaveListing(CurList)
 
 
 
@@ -191,9 +194,9 @@ FacebookList = [
     "https://www.facebook.com/marketplace/108308852524610/vehicles/?maxYear=1987&minYear=1983&sortBy=price_ascend&make=Toyota&model=Corolla&exact=false"
 ]
 for Pages in range(len(FacebookList)):
-    ResultsFile.write("\n")
-    ResultsFile.write(FacebookList[Pages])
-    ResultsFile.write("\n")
+    CurList = CarListing()
+    CurList.ListLink = FacebookList[Pages]
+    SaveListing(CurList)
 # driver.get(FacebookList[0])
 # try:
 #     NoResults = driver.find_element(By.ID,"login_form")
