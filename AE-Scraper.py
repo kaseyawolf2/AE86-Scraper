@@ -15,11 +15,12 @@ chrome_options = Options()
 chrome_options.add_argument('--no-sandbox')
 chrome_options.add_argument('--headless')
 
-driver = webdriver.Chrome(executable_path='/usr/lib/chromium-browser/chromedriver', options=chrome_options)
+#driver = webdriver.Chrome(executable_path='/usr/lib/chromium-browser/chromedriver', options=chrome_options)
+driver = webdriver.Chrome("C:\Program Files (x86)\Selenium Drivers\chromedriver.exe")
 driver.set_window_size(1024,786)
 
 dbconn = sqlite3.connect('test.db')
-dbconn.execute("CREATE TABLE IF NOT EXISTS Listings(ListPicture,ListHeading,ListLink type UNIQUE,ListCity,ListState,ListDate,ListAuctionEndDate,ListPrice,ListBuyout,CarTitle,CarFuelType,CarMileage,CarYear,CarBodyType,CarBodyColor,CarCondition,CarTransmission,CarWheelDrive,CarSteerLoc)")
+dbconn.execute("CREATE TABLE IF NOT EXISTS Listings(ListPicture,ListHeading,ListLink type UNIQUE,ListCity,ListState,ListDate,ListAuctionEndDate,ListPrice,ListBuyout,CarTitle,CarFuelType,CarMileage,CarYear,CarBodyType,CarBodyColor,CarCondition,CarTransmission,CarWheelDrive,CarSteerLoc,ListUpdateDate)")
 
 class CarListing:
     #Listing Info
@@ -43,10 +44,11 @@ class CarListing:
     CarTransmission = ""
     CarWheelDrive = ""
     CarSteerLoc = ""
+    ListUpdateDate = datetime.datetime.now()
 
 def SaveListing(Listing):
     #print("INSERT INTO Listings VALUES ('{ListPicture}','{ListHeading}','{ListLink}','{ListCity}','{ListState}','{ListDate}','{ListAuctionEndDate}','{ListPrice}','{ListBuyout}','{CarTitle}','{CarFuelType}','{CarMileage}','{CarYear}','{CarBodyType}','{CarBodyColor}','{CarCondition}','{CarTransmission}','{CarWheelDrive}','{CarSteerLoc}')".format(ListPicture = Listing.ListPicture,ListHeading = Listing.ListHeading,ListLink = Listing.ListLink,ListCity = Listing.ListCity,ListState = Listing.ListState,ListDate = Listing.ListDate,ListAuctionEndDate = Listing.ListAuctionEndDate,ListPrice = Listing.ListPrice,ListBuyout = Listing.ListBuyout,CarTitle = Listing.CarTitle,CarFuelType = Listing.CarFuelType,CarMileage = Listing.CarMileage,CarYear = Listing.CarYear,CarBodyType = Listing.CarBodyType,CarBodyColor = Listing.CarBodyColor,CarCondition = Listing.CarCondition,CarTransmission = Listing.CarTransmission,CarWheelDrive = Listing.CarWheelDrive,CarSteerLoc = Listing.CarSteerLoc))
-    dbconn.execute("INSERT OR REPLACE INTO Listings VALUES ('{ListPicture}','{ListHeading}','{ListLink}','{ListCity}','{ListState}','{ListDate}','{ListAuctionEndDate}','{ListPrice}','{ListBuyout}','{CarTitle}','{CarFuelType}','{CarMileage}','{CarYear}','{CarBodyType}','{CarBodyColor}','{CarCondition}','{CarTransmission}','{CarWheelDrive}','{CarSteerLoc}')".format(ListPicture = Listing.ListPicture,ListHeading = Listing.ListHeading,ListLink = Listing.ListLink,ListCity = Listing.ListCity,ListState = Listing.ListState,ListDate = Listing.ListDate,ListAuctionEndDate = Listing.ListAuctionEndDate,ListPrice = Listing.ListPrice,ListBuyout = Listing.ListBuyout,CarTitle = Listing.CarTitle,CarFuelType = Listing.CarFuelType,CarMileage = Listing.CarMileage,CarYear = Listing.CarYear,CarBodyType = Listing.CarBodyType,CarBodyColor = Listing.CarBodyColor,CarCondition = Listing.CarCondition,CarTransmission = Listing.CarTransmission,CarWheelDrive = Listing.CarWheelDrive,CarSteerLoc = Listing.CarSteerLoc))
+    dbconn.execute("INSERT OR REPLACE INTO Listings VALUES ('{ListPicture}','{ListHeading}','{ListLink}','{ListCity}','{ListState}','{ListDate}','{ListAuctionEndDate}','{ListPrice}','{ListBuyout}','{CarTitle}','{CarFuelType}','{CarMileage}','{CarYear}','{CarBodyType}','{CarBodyColor}','{CarCondition}','{CarTransmission}','{CarWheelDrive}','{CarSteerLoc}','{ListUpdateDate}')".format(ListPicture = Listing.ListPicture,ListHeading = Listing.ListHeading,ListLink = Listing.ListLink,ListCity = Listing.ListCity,ListState = Listing.ListState,ListDate = Listing.ListDate,ListAuctionEndDate = Listing.ListAuctionEndDate,ListPrice = Listing.ListPrice,ListBuyout = Listing.ListBuyout,CarTitle = Listing.CarTitle,CarFuelType = Listing.CarFuelType,CarMileage = Listing.CarMileage,CarYear = Listing.CarYear,CarBodyType = Listing.CarBodyType,CarBodyColor = Listing.CarBodyColor,CarCondition = Listing.CarCondition,CarTransmission = Listing.CarTransmission,CarWheelDrive = Listing.CarWheelDrive,CarSteerLoc = Listing.CarSteerLoc,ListUpdateDate = Listing.ListUpdateDate))
     dbconn.commit()
 
 
