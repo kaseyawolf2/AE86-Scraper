@@ -66,9 +66,12 @@ for Pages in range(1,4):    #50 per page * 5 = 250 Cars... 1 Car is on list curr
         NoResults = driver.find_element(By.CLASS_NAME,"panel-warning").find_element(By.CLASS_NAME,"panel-heading").text
     except:
         FoundResults = driver.find_elements(By.CLASS_NAME,"searchresults_frame")
+        print("Found " + str(len(FoundResults)) +" results, Saving and Moving on")
         for results in range(len(FoundResults)):
             CurList = CarListing()
             CurList.ListLink = FoundResults[results].find_element(By.TAG_NAME,"a").get_attribute("href")
+            CurList.ListPrice = FoundResults[results].find_element(By.CLASS_NAME,"sr_ad_price").text 
+            CurList.ListDate = FoundResults[results].find_element(By.CLASS_NAME,"time-stamp").text
             SaveListing(CurList)
     else:
         NoResults = driver.find_element(By.CLASS_NAME,"panel-warning").find_element(By.CLASS_NAME,"panel-heading").text
@@ -117,47 +120,46 @@ for Pages in range(len(CraigsList)):
         NoResults = driver.find_element(By.CLASS_NAME,"alert-warning")
     except:
         FoundResults = driver.find_element(By.ID,"search-results").find_elements(By.CLASS_NAME, "result-row")
-        print("Found " + str(len(FoundResults)) +" results, Moving on")
+        print("Found " + str(len(FoundResults)) +" results, Saving and Moving on")
         for results in range(len(FoundResults)):
             CurList = CarListing()
             CurList.ListHeading = FoundResults[results].find_element(By.CLASS_NAME, "result-heading").text
             CurList.ListLink = FoundResults[results].find_element(By.TAG_NAME,"a").get_attribute("href")
             CurList.ListDate = FoundResults[results].find_element(By.CLASS_NAME, "result-date").text
             CurList.ListPrice = FoundResults[results].find_element(By.CLASS_NAME, "result-price").text
+            #go inside for more info
+            #driver.get(FoundResults[results].find_element(By.TAG_NAME,"a").get_attribute("href"))
+
             SaveListing(CurList)
     else:
         print("Found no results, Moving on")
 
 
 ##Collector Car Feed
-# driver.get("https://collectorcarfeed.com/forum/viewtopic.php?f=2&t=92")
-# time.sleep(1)
+driver.get("https://collectorcarfeed.com/forum/viewtopic.php?f=2&t=92")
+time.sleep(1)
 
-# try:
-#     driver.find_element(By.ID,"facebookTable").find_element(By.CLASS_NAME, "dataTables_empty")
-# except:
-#     print("Found no Marketplace Items, Moving on")
-# else:
-#     FoundResults = driver.find_element(By.ID,"facebookTable").find_element(By.TAG_NAME, "tbody").find_elements(By.TAG_NAME,"tr")
-#     for results in range(len(FoundResults)):
-#         ResultsFile.write(FoundResults[results].text) #write info
-#         ResultsFile.write("\n")
-#         ResultsFile.write(FoundResults[results].find_element(By.TAG_NAME,"a").get_attribute("href")) #write link to post
-#         ResultsFile.write("\n")
-#         ResultsFile.write("\n")
-#wont error out due to empty table
-# try:
-#     driver.find_element(By.ID,"bringatrailerTable").find_element(By.CLASS_NAME, "dataTables_empty")
-# except:
-#     print("Found no Auctions, Moving on")
-# else:
-#     FoundResults = driver.find_element(By.ID,"bringatrailerTable").find_element(By.TAG_NAME, "tbody").find_elements(By.TAG_NAME,"tr")
-#     for results in range(len(FoundResults)):
-#         ResultsFile.write(str(FoundResults[results].text.encode(encoding="ascii",errors="ignore"))) #write info
-#         ResultsFile.write("\n")
-#         ResultsFile.write(FoundResults[results].find_element(By.TAG_NAME,"a").get_attribute("href")) #write link to post
-#         ResultsFile.write("\n")
-#         ResultsFile.write("\n")
+try:
+    driver.find_element(By.ID,"facebookTable").find_element(By.CLASS_NAME, "dataTables_empty")
+except:
+    FoundResults = driver.find_element(By.ID,"facebookTable").find_element(By.TAG_NAME, "tbody").find_elements(By.TAG_NAME,"tr")
+    print("Found " + str(len(FoundResults)) +" results, Saving and Moving on")
+    for results in range(len(FoundResults)):
+        CurList = CarListing()
+        CurList.ListLink = FoundResults[results].find_element(By.TAG_NAME,"a").get_attribute("href") #write link to post
+else:
+    print("Found no Marketplace Items, Moving on")
+try:
+    driver.find_element(By.ID,"bringatrailerTable").find_element(By.CLASS_NAME, "dataTables_empty")
+except:
+    FoundResults = driver.find_element(By.ID,"bringatrailerTable").find_element(By.TAG_NAME, "tbody").find_elements(By.TAG_NAME,"tr")
+    print("Found " + str(len(FoundResults)) +" results, Saving and Moving on")
+    for results in range(len(FoundResults)):
+        CurList = CarListing()
+        CurList.ListLink = FoundResults[results].find_element(By.TAG_NAME,"a").get_attribute("href") #write link to post
+else:
+    print("Found no Auctions, Moving on")
+    
 
 
 
