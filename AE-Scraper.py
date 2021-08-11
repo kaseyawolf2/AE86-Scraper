@@ -224,6 +224,5 @@ for Pages in range(len(FacebookList)):
 #     else:
 #         print("Found no results, Moving on")
 
-
-ResultsFile.close()
 driver.close()
+dbconn.close()

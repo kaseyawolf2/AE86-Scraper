@@ -1,0 +1,8 @@
+{% for row in rows %}
+   <tr>
+      <td>{{row["ListPrice"]}}</td>
+      <td>{{row["ListLink"]}}</td>
+      <td> {{ row["city"]}}</td>
+      <td>{{row['pin']}}</td>	
+   </tr>
+{% endfor %}
